@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Trang Giới thiệu — Sinh viên Nguyễn Văn Nam (DTC235180129) - Học phần Vận hành và Bảo trì Phần mềm tại ICTU.">
+    <title>Giới thiệu — Nguyễn Văn Nam (DTC235180129)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 24px 16px;
+            color: #1e293b;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px 36px;
+            max-width: 640px;
+            width: 100%;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2);
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .nav-bar {
+            display: inline-flex;
+            gap: 8px;
+            background: #f1f5f9;
+            padding: 6px;
+            border-radius: 9999px;
+            margin-bottom: 24px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .nav-link {
+            text-decoration: none;
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 18px;
+            border-radius: 9999px;
+            transition: all 0.2s ease;
+        }
+        .nav-link:hover {
+            color: #4338ca;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        .nav-link.active {
+            color: #ffffff;
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+        }
+        .avatar-container {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 16px;
+        }
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #ffffff;
+            box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.4), 0 0 0 3px #6366f1;
+        }
+        h1 {
+            color: #1e1b4b;
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+        h2 {
+            color: #4f46e5;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .bio-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: left;
+            font-size: 14.5px;
+            line-height: 1.7;
+            color: #334155;
+        }
+        .bio-box p {
+            margin-bottom: 12px;
+        }
+        .bio-box p:last-child {
+            margin-bottom: 0;
+        }
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            text-align: left;
+            margin: 20px 0;
+        }
+        .skill-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .skill-title {
+            font-weight: 700;
+            color: #1e1b4b;
+            font-size: 14px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .skill-desc {
+            font-size: 12.5px;
+            color: #64748b;
+        }
+        .footer {
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid #f1f5f9;
+            font-size: 13px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <!-- Navigation Bar -->
+        <nav class="nav-bar" aria-label="Main Navigation">
+            <a href="index.html" class="nav-link">Trang chủ</a>
+            <a href="about.html" class="nav-link active">Giới thiệu</a>
+            <a href="contact.html" class="nav-link">Liên hệ</a>
+        </nav>
+
+        <div class="avatar-container">
+            <img src="avatar.png" alt="Ảnh chân dung Nguyễn Văn Nam" class="avatar-img" width="110" height="110">
+        </div>
+
+        <h1>Về Tôi — Nguyễn Văn Nam</h1>
+        <h2>Sinh viên Công nghệ Thông tin | ICTU Thái Nguyên</h2>
+
+        <section class="bio-box">
+            <p>👋 Xin chào! Tôi là <strong>Nguyễn Văn Nam</strong>, hiện đang là sinh viên theo học chuyên ngành Công nghệ Thông tin tại <strong>Trường Đại học Công nghệ Thông tin và Truyền thông — Đại học Thái Nguyên (ICTU)</strong>, mã số sinh viên <strong>DTC235180129</strong>.</p>
+            <p>🚀 Tôi đam mê nghiên cứu về văn hóa và kỹ thuật <strong>DevOps</strong>, tự động hóa quy trình triển khai phần mềm (CI/CD Pipelines), tối ưu hóa hiệu năng và quản trị hệ thống Cloud.</p>
+        </section>
+
+        <section class="skills-grid" aria-label="Kỹ năng DevOps">
+            <div class="skill-card">
+                <div class="skill-title">📦 Git & GitHub</div>
+                <div class="skill-desc">Quản lý mã nguồn, branching model, pull requests</div>
+            </div>
+            <div class="skill-card">
+                <div class="skill-title">⚡ CI/CD Pipelines</div>
+                <div class="skill-desc">GitHub Actions, automated build, test & deploy</div>
+            </div>
+            <div class="skill-card">
+                <div class="skill-title">🐧 Linux & Scripts</div>
+                <div class="skill-desc">Môi trường Ubuntu, PowerShell, Bash scripting</div>
+            </div>
+            <div class="skill-card">
+                <div class="skill-title">🌐 Web & Cloud</div>
+                <div class="skill-desc">HTML5, CSS3, JavaScript, GitHub Pages hosting</div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>Học phần: <strong>Vận hành & Bảo trì Phần mềm</strong> — Giảng viên hướng dẫn: ICTU</p>
+        </footer>
+    </main>
+</body>
+</html>

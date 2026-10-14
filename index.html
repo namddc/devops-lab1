@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DevOps Lab 1 Portfolio — Nguyễn Văn Nam (DTC235180129) - ICTU Thái Nguyên. Trải nghiệm CI/CD Pipeline tự động với GitHub Actions.">
     <title>DevOps Lab 1 — Nguyễn Văn Nam (DTC235180129)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,16 +19,17 @@
             background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 24px;
+            padding: 24px 16px;
             color: #1e293b;
         }
         .container {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(20px);
             border-radius: 24px;
-            padding: 48px;
+            padding: 40px 36px;
             max-width: 640px;
             width: 100%;
             box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2);
@@ -37,6 +39,70 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        /* Navigation Bar (Multi-page extension) */
+        .nav-bar {
+            display: inline-flex;
+            gap: 8px;
+            background: #f1f5f9;
+            padding: 6px;
+            border-radius: 9999px;
+            margin-bottom: 24px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .nav-link {
+            text-decoration: none;
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 18px;
+            border-radius: 9999px;
+            transition: all 0.2s ease;
+        }
+        .nav-link:hover {
+            color: #4338ca;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        .nav-link.active {
+            color: #ffffff;
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+        }
+        /* Avatar Styling (Avatar extension) */
+        .avatar-container {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            margin: 0 auto 16px;
+        }
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #ffffff;
+            box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.4), 0 0 0 3px #6366f1;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .avatar-img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px -5px rgba(79, 70, 229, 0.5), 0 0 0 4px #4f46e5;
+        }
+        .avatar-badge {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            background: #22c55e;
+            color: #ffffff;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 3px solid #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
         .header-tag {
             display: inline-flex;
@@ -50,36 +116,36 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
         h1 {
             color: #1e1b4b;
-            font-size: 32px;
+            font-size: 30px;
             font-weight: 800;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             letter-spacing: -0.5px;
         }
         h2 {
             color: #4f46e5;
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 600;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
         .info-card {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
             border-radius: 16px;
-            padding: 24px;
-            margin: 20px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
             text-align: left;
         }
         .info-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
+            padding: 9px 0;
             border-bottom: 1px solid #f1f5f9;
-            font-size: 15px;
+            font-size: 14.5px;
         }
         .info-row:last-child {
             border-bottom: none;
@@ -129,7 +195,7 @@
             flex-wrap: wrap;
             justify-content: center;
             gap: 8px;
-            margin: 24px 0 16px;
+            margin: 20px 0 16px;
         }
         .badge {
             background: #ede9fe;
@@ -145,8 +211,8 @@
             background: #ddd6fe;
         }
         .footer {
-            margin-top: 24px;
-            padding-top: 20px;
+            margin-top: 20px;
+            padding-top: 18px;
             border-top: 1px solid #f1f5f9;
             font-size: 13px;
             color: #64748b;
@@ -158,14 +224,27 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <main class="container">
+        <!-- Navigation Bar (Bài tập mở rộng: Multi-page) -->
+        <nav class="nav-bar" aria-label="Main Navigation">
+            <a href="index.html" class="nav-link active">Trang chủ</a>
+            <a href="about.html" class="nav-link">Giới thiệu</a>
+            <a href="contact.html" class="nav-link">Liên hệ</a>
+        </nav>
+
+        <!-- Avatar đại diện (Bài tập mở rộng: Thêm ảnh avatar) -->
+        <div class="avatar-container">
+            <img src="avatar.png" alt="Ảnh chân dung Nguyễn Văn Nam - DTC235180129" class="avatar-img" width="130" height="130">
+            <span class="avatar-badge" title="Đang hoạt động">✓</span>
+        </div>
+
         <div class="header-tag">
             <span>🚀</span> DevOps Workflow End-to-End
         </div>
         <h1>Xin chào, DevOps! 👋</h1>
         <h2>Lab 1 — Website đã được cập nhật tự động! 🚀</h2>
 
-        <div class="info-card">
+        <section class="info-card" aria-label="Thông tin sinh viên và hệ thống">
             <div class="info-row">
                 <span class="label">👤 Sinh viên:</span>
                 <span class="value">NGUYỄN VĂN NAM</span>
@@ -194,23 +273,24 @@
                 <span class="label">📅 Ngày triển khai:</span>
                 <span class="value" id="date"></span>
             </div>
-        </div>
+        </section>
 
-        <div class="badges-wrapper">
+        <section class="badges-wrapper" aria-label="Các công nghệ sử dụng">
             <span class="badge">HTML5</span>
             <span class="badge">CSS3</span>
             <span class="badge">Git</span>
             <span class="badge">GitHub Actions</span>
             <span class="badge">GitHub Pages</span>
             <span class="badge">CI/CD Pipeline</span>
+            <span class="badge">Lighthouse CI</span>
             <span class="badge">DevOps 2026</span>
-        </div>
+        </section>
 
-        <div class="footer">
+        <footer class="footer">
             <p>Triển khai tự động bằng <strong>GitHub Actions CI/CD Pipeline</strong></p>
-            <p>⚡ <em>Push code ➔ CI Build & Validate ➔ Auto Deploy ➔ Website Live!</em></p>
-        </div>
-    </div>
+            <p>⚡ <em>Push code ➔ CI Build & Validate ➔ Lighthouse Audit ➔ Auto Deploy ➔ Website Live!</em></p>
+        </footer>
+    </main>
 
     <script>
         document.getElementById('date').textContent = new Date().toLocaleDateString('vi-VN', {
