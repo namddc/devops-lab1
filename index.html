@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps Lab 1 — Nguyễn Văn Nam (DTC235180129)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            color: #1e293b;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 640px;
+            width: 100%;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2);
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .header-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #e0e7ff;
+            color: #4338ca;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+        h1 {
+            color: #1e1b4b;
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        h2 {
+            color: #4f46e5;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+        .info-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 24px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 15px;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .info-row:first-child {
+            padding-top: 0;
+        }
+        .label {
+            color: #64748b;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .value {
+            color: #0f172a;
+            font-weight: 700;
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #dcfce7;
+            color: #15803d;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px #22c55e;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        .badges-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin: 24px 0 16px;
+        }
+        .badge {
+            background: #ede9fe;
+            color: #5b21b6;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .badge:hover {
+            transform: translateY(-2px);
+            background: #ddd6fe;
+        }
+        .footer {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #f1f5f9;
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+        .footer strong {
+            color: #4338ca;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-tag">
+            <span>🚀</span> DevOps Workflow End-to-End
+        </div>
+        <h1>Hello, DevOps! 👋</h1>
+        <h2>Lab 1 — Trải nghiệm CI/CD Pipeline Tự Động</h2>
+
+        <div class="info-card">
+            <div class="info-row">
+                <span class="label">👤 Sinh viên:</span>
+                <span class="value">NGUYỄN VĂN NAM</span>
+            </div>
+            <div class="info-row">
+                <span class="label">🆔 Mã số sinh viên:</span>
+                <span class="value">DTC235180129</span>
+            </div>
+            <div class="info-row">
+                <span class="label">🏫 Trường đào tạo:</span>
+                <span class="value">ICTU - Thái Nguyên</span>
+            </div>
+            <div class="info-row">
+                <span class="label">📚 Môn học:</span>
+                <span class="value">Vận hành & Bảo trì Phần mềm</span>
+            </div>
+            <div class="info-row">
+                <span class="label">⚙️ Pipeline Status:</span>
+                <span class="value">
+                    <span class="status-badge">
+                        <span class="status-dot"></span> Automated Live
+                    </span>
+                </span>
+            </div>
+            <div class="info-row">
+                <span class="label">📅 Ngày triển khai:</span>
+                <span class="value" id="date"></span>
+            </div>
+        </div>
+
+        <div class="badges-wrapper">
+            <span class="badge">HTML5</span>
+            <span class="badge">CSS3</span>
+            <span class="badge">Git</span>
+            <span class="badge">GitHub Actions</span>
+            <span class="badge">GitHub Pages</span>
+            <span class="badge">CI/CD Pipeline</span>
+            <span class="badge">DevOps 2026</span>
+        </div>
+
+        <div class="footer">
+            <p>Triển khai tự động bằng <strong>GitHub Actions CI/CD Pipeline</strong></p>
+            <p>⚡ <em>Push code ➔ CI Build & Validate ➔ Auto Deploy ➔ Website Live!</em></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('date').textContent = new Date().toLocaleDateString('vi-VN', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    </script>
+</body>
+</html>
