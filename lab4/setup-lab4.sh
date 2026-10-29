@@ -2,6 +2,7 @@
 # ==============================================================================
 # Script tự động khởi tạo môi trường Lab 4 trên GitHub Codespaces
 # Sinh viên: NGUYỄN VĂN NAM - DTC235180129
+# TÍCH HỢP BÀI TẬP MỞ RỘNG: JINJA2 TEMPLATE & HANDLERS
 # ==============================================================================
 
 set -e
@@ -47,8 +48,9 @@ ansible all -m ping
 
 echo ""
 echo "=========================================================="
-echo "🎉 SETUP HOÀN TẤT! BÂY GIỜ BẠN CÓ THỂ CHẠY CÁC LỆNH ĐỂ SHOW CHO CÔ:"
-echo "1. Chạy playbook cài Apache: ansible-playbook playbook-webserver.yml"
-echo "2. Chạy lại lần 2 kiểm tra Idempotent: ansible-playbook playbook-webserver.yml"
-echo "3. Chạy full playbook: ansible-playbook playbook-full.yml"
+echo "🎉 SETUP HOÀN TẤT! CÁC LỆNH ĐỂ BẠN SHOW CHO CÔ:"
+echo "1. Chạy playbook Web (Jinja2 + Handler): ansible-playbook playbook-webserver.yml"
+echo "2. Chạy lại lần 2 kiểm tra Idempotent:  ansible-playbook playbook-webserver.yml"
+echo "3. Kiểm tra trang web render Jinja2:    docker exec web-server-1 curl -s http://localhost"
+echo "4. Chạy full stack & health check:      ansible-playbook playbook-full.yml"
 echo "=========================================================="

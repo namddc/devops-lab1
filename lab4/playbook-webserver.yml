@@ -2,8 +2,9 @@
 # ============================================
 # DevOps Lab 4 — Playbook: Cấu hình Web Server
 # Sinh viên: NGUYỄN VĂN NAM - DTC235180129
+# TÍCH HỢP BÀI TẬP MỞ RỘNG: JINJA2 TEMPLATE & HANDLERS
 # ============================================
-- name: Configure Web Servers
+- name: Configure Web Servers with Jinja2 Template & Handlers
   hosts: webservers
   become: yes            # Chạy với quyền root
   gather_facts: yes      # Thu thập thông tin hệ thống (facts)
@@ -33,39 +34,13 @@
         state: started
         enabled: yes
 
-    # Task 4: Tạo file index.html tùy chỉnh chứa facts của server
-    - name: Create custom index.html
-      copy:
-        content: |
-          <!DOCTYPE html>
-          <html lang="vi">
-          <head>
-            <meta charset="UTF-8">
-            <title>DevOps Lab 4 — Ansible Managed</title>
-            <style>
-              body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: #f8fafc; padding: 40px; text-align: center; }
-              .card { background: #1e293b; max-width: 600px; margin: 0 auto; border-radius: 12px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #38bdf8; }
-              h1 { color: #38bdf8; margin-bottom: 20px; font-size: 26px; }
-              .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #334155; }
-              .label { color: #94a3b8; font-weight: bold; }
-              .val { color: #10b981; font-weight: 600; }
-              .badge { margin-top: 20px; display: inline-block; background: #0284c7; color: white; padding: 6px 16px; border-radius: 9999px; font-size: 14px; font-weight: bold; }
-            </style>
-          </head>
-          <body>
-            <div class="card">
-              <h1>🚀 DevOps Lab 4 — Ansible Managed!</h1>
-              <div class="info-row"><span class="label">Server Hostname:</span><span class="val">{{ ansible_hostname }}</span></div>
-              <div class="info-row"><span class="label">Operating System:</span><span class="val">{{ ansible_distribution }} {{ ansible_distribution_version }}</span></div>
-              <div class="info-row"><span class="label">Target IP / Port:</span><span class="val">{{ ansible_host }}:{{ ansible_port }}</span></div>
-              <div class="info-row"><span class="label">Managed Node:</span><span class="val">Ubuntu 22.04 Container (Docker)</span></div>
-              <div class="info-row"><span class="label">Student Name:</span><span class="val">NGUYỄN VĂN NAM (DTC235180129)</span></div>
-              <div class="badge">Cấu hình tự động 100% bằng Ansible Playbook</div>
-            </div>
-          </body>
-          </html>
+    # Task 4 [BÀI TẬP MỞ RỘNG]: Triển khai trang web động bằng Jinja2 Template và gọi Handler
+    - name: Deploy dynamic index.html using Jinja2 Template
+      template:
+        src: templates/index.html.j2
         dest: "{{ web_root }}/index.html"
         mode: '0644'
+      notify: restart apache2
 
     # Task 5: Mở port 80 trong firewall (nếu có ufw)
     - name: Allow HTTP through firewall
@@ -73,4 +48,11 @@
         rule: allow
         port: '80'
         proto: tcp
-      ignore_errors: yes   # Bỏ qua nếu firewall chưa cài
+      ignore_errors: yes
+
+  # [BÀI TẬP MỞ RỘNG]: Handler tự động kích hoạt khi có thay đổi cấu hình/template
+  handlers:
+    - name: restart apache2
+      service:
+        name: "{{ web_service }}"
+        state: restarted
