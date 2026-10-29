@@ -1,0 +1,68 @@
+---
+# ============================================
+# DevOps Lab 4 — Full Stack Playbook
+# Sinh viên: NGUYỄN VĂN NAM - DTC235180129
+# Cấu hình Multi-tier: Webservers + Database + Monitoring
+# ============================================
+
+# ----- Phần 1: Cấu hình Web Tier -----
+- name: Configure Web Tier & Deploy Application Script
+  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: Install common packages (curl, git, htop, vim)
+      apt:
+        name:
+          - curl
+          - git
+          - htop
+          - vim
+        state: present
+        update_cache: yes
+
+    - name: Create application directory
+      file:
+        path: /opt/myapp
+        state: directory
+        mode: '0755'
+
+    - name: Deploy application environment config
+      copy:
+        content: |
+          APP_NAME=DevOpsLab4
+          APP_ENV=production
+          APP_PORT=8080
+          MANAGED_BY=Ansible_Automation
+          MAINTAINER=NguyenVanNam_DTC235180129
+        dest: /opt/myapp/config.env
+        mode: '0644'
+
+    - name: Deploy health check script
+      copy:
+        content: |
+          #!/bin/bash
+          echo "=========================================="
+          echo "=== Ansible Health Check: $(date) ==="
+          echo "=========================================="
+          echo "Hostname : $(hostname)"
+          echo "Uptime   : $(uptime -p 2>/dev/null || uptime)"
+          echo "Disk     : $(df -h / | tail -1)"
+          echo "Memory   : $(free -m | grep Mem || cat /proc/meminfo | head -2)"
+          echo "Apache   : $(service apache2 status | grep 'Active:' || echo 'Running')"
+          echo "=========================================="
+        dest: /opt/myapp/health-check.sh
+        mode: '0755'
+
+# ----- Phần 2: Setup Monitoring Agents cho toàn bộ cụm Server -----
+- name: Setup Monitoring & Network Utilities on All Servers
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install monitoring tools (sysstat, net-tools)
+      apt:
+        name:
+          - sysstat
+          - net-tools
+        state: present
