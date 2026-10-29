@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevOps Lab 4 — Jinja2 Dynamic Template</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0b0f19;
+      color: #f8fafc;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: #161e2e;
+      border: 1px solid #38bdf8;
+      border-radius: 16px;
+      padding: 36px;
+      max-width: 650px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      text-align: center;
+    }
+    h1 {
+      color: #38bdf8;
+      margin-bottom: 8px;
+      font-size: 26px;
+    }
+    .subtitle {
+      color: #94a3b8;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid #38bdf8;
+      color: #38bdf8;
+      padding: 6px 16px;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+    .table-info {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      margin-bottom: 24px;
+      background: #0f172a;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .table-info td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #1e293b;
+      font-size: 14px;
+    }
+    .table-info tr:last-child td {
+      border-bottom: none;
+    }
+    .lbl {
+      color: #94a3b8;
+      font-weight: 600;
+      width: 40%;
+    }
+    .val {
+      color: #10b981;
+      font-weight: 700;
+    }
+    .status-ok {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13.5px;
+      border: 1px solid #10b981;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="badge">🔥 BÀI TẬP MỞ RỘNG: JINJA2 TEMPLATE + HANDLERS</div>
+    <h1>🚀 DevOps Lab 4 — Ansible Managed</h1>
+    <div class="subtitle">Trang web được render động bằng Jinja2 Engine & tự động Restart qua Handler</div>
+
+    <table class="table-info">
+      <tr>
+        <td class="lbl">Server Hostname:</td>
+        <td class="val">{{ ansible_hostname }}</td>
+      </tr>
+      <tr>
+        <td class="lbl">Hệ điều hành:</td>
+        <td class="val">{{ ansible_distribution }} {{ ansible_distribution_version }} ({{ ansible_architecture }})</td>
+      </tr>
+      <tr>
+        <td class="lbl">Target IP / Port:</td>
+        <td class="val">{{ ansible_host }}:{{ ansible_port }}</td>
+      </tr>
+      <tr>
+        <td class="lbl">RAM hệ thống:</td>
+        <td class="val">{{ ansible_memtotal_mb | default(2048) }} MB</td>
+      </tr>
+      <tr>
+        <td class="lbl">Thời gian deploy:</td>
+        <td class="val">{{ ansible_date_time.date }} {{ ansible_date_time.time }}</td>
+      </tr>
+      <tr>
+        <td class="lbl">Sinh viên thực hiện:</td>
+        <td class="val">NGUYỄN VĂN NAM (DTC235180129)</td>
+      </tr>
+      <tr>
+        <td class="lbl">Trường / Lớp:</td>
+        <td class="val">ICTU — Lớp K22</td>
+      </tr>
+    </table>
+
+    <div class="status-ok">
+      ✓ Apache2 Active & Reloaded via Ansible Handler
+    </div>
+  </div>
+
+</body>
+</html>
