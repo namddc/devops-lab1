@@ -11,6 +11,15 @@ echo "=========================================================="
 echo "🚀 ĐANG KHỞI TẠO MÔI TRƯỜNG ANSIBLE LAB 4..."
 echo "=========================================================="
 
+# Fix quyền thư mục world-writable trên Codespaces và nạp ANSIBLE_CONFIG
+chmod 755 . 2>/dev/null || true
+export ANSIBLE_CONFIG=./ansible.cfg
+
+# Ghi cố định vào bashrc để các lệnh sau không bao giờ bị lỗi
+if ! grep -q "ANSIBLE_CONFIG" ~/.bashrc; then
+    echo "export ANSIBLE_CONFIG=/workspaces/devops-lab1/lab4/ansible.cfg" >> ~/.bashrc
+fi
+
 # 1. Cài đặt Ansible nếu chưa có
 if ! command -v ansible &> /dev/null; then
     echo "📦 Đang cài đặt Ansible..."
@@ -44,13 +53,13 @@ echo ""
 echo "=========================================================="
 echo "🎯 ĐANG TEST KẾT NỐI: ansible all -m ping"
 echo "=========================================================="
-ansible all -m ping
+ansible all -i inventory.ini -m ping
 
 echo ""
 echo "=========================================================="
 echo "🎉 SETUP HOÀN TẤT! CÁC LỆNH ĐỂ BẠN SHOW CHO CÔ:"
-echo "1. Chạy playbook Web (Jinja2 + Handler): ansible-playbook playbook-webserver.yml"
-echo "2. Chạy lại lần 2 kiểm tra Idempotent:  ansible-playbook playbook-webserver.yml"
+echo "1. Chạy playbook Web (Jinja2 + Handler): ansible-playbook -i inventory.ini playbook-webserver.yml"
+echo "2. Chạy lại lần 2 kiểm tra Idempotent:  ansible-playbook -i inventory.ini playbook-webserver.yml"
 echo "3. Kiểm tra trang web render Jinja2:    docker exec web-server-1 curl -s http://localhost"
-echo "4. Chạy full stack & health check:      ansible-playbook playbook-full.yml"
+echo "4. Chạy full stack & health check:      ansible-playbook -i inventory.ini playbook-full.yml"
 echo "=========================================================="
