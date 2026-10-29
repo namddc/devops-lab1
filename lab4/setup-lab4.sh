@@ -11,30 +11,36 @@ echo "=========================================================="
 echo "🚀 ĐANG KHỞI TẠO MÔI TRƯỜNG ANSIBLE LAB 4..."
 echo "=========================================================="
 
-# Fix quyền thư mục world-writable trên Codespaces và nạp ANSIBLE_CONFIG
-chmod 755 . 2>/dev/null || true
-export ANSIBLE_CONFIG=./ansible.cfg
-
-# Ghi cố định vào bashrc để các lệnh sau không bao giờ bị lỗi
-if ! grep -q "ANSIBLE_CONFIG" ~/.bashrc; then
-    echo "export ANSIBLE_CONFIG=/workspaces/devops-lab1/lab4/ansible.cfg" >> ~/.bashrc
+# 1. Cài đặt sshpass (bắt buộc cho Ansible dùng SSH password authentication)
+if ! command -v sshpass &> /dev/null; then
+    echo "🔑 Đang cài đặt sshpass..."
+    sudo apt-get update -qq && sudo apt-get install -y sshpass || true
 fi
 
-# 1. Cài đặt Ansible nếu chưa có
+# 2. Cài đặt Ansible nếu chưa có
 if ! command -v ansible &> /dev/null; then
     echo "📦 Đang cài đặt Ansible..."
     pip install ansible
 fi
 
-# 2. Tạo Docker Network
+# 3. Fix triệt để lỗi world-writable directory của Codespaces: copy cấu hình vào ~/.ansible.cfg
+echo "⚙️ Thiết lập cấu hình Ansible chuẩn cho môi trường Codespaces..."
+chmod 755 . 2>/dev/null || true
+cp -f ./ansible.cfg ~/.ansible.cfg 2>/dev/null || true
+export ANSIBLE_CONFIG=/workspaces/devops-lab1/lab4/ansible.cfg
+if ! grep -q "ANSIBLE_CONFIG" ~/.bashrc; then
+    echo "export ANSIBLE_CONFIG=/workspaces/devops-lab1/lab4/ansible.cfg" >> ~/.bashrc
+fi
+
+# 4. Tạo Docker Network
 echo "🌐 Đang tạo Docker Network 'ansible-lab'..."
 docker network create ansible-lab 2>/dev/null || true
 
-# 3. Dừng và xóa containers cũ nếu đã tồn tại
+# 5. Dừng và xóa containers cũ nếu đã tồn tại
 echo "🔄 Làm sạch các container cũ nếu có..."
 docker rm -f web-server-1 web-server-2 db-server-1 2>/dev/null || true
 
-# 4. Khởi chạy 3 container làm Managed Nodes
+# 6. Khởi chạy 3 container làm Managed Nodes
 echo "🐳 Đang khởi chạy 3 container Ubuntu SSH (web-server-1, web-server-2, db-server-1)..."
 docker run -d --name web-server-1 --privileged --network ansible-lab -p 2201:22 phamthuongdocker/ubuntu-sshd:22.04
 docker run -d --name web-server-2 --privileged --network ansible-lab -p 2202:22 phamthuongdocker/ubuntu-sshd:22.04
@@ -44,7 +50,7 @@ docker run -d --name db-server-1  --privileged --network ansible-lab -p 2203:22 
 echo "⏳ Chờ 3 giây để dịch vụ SSH khởi động..."
 sleep 3
 
-# 5. Kiểm tra danh sách container
+# 7. Kiểm tra danh sách container
 echo ""
 echo "✅ DANH SÁCH 3 MÁY CHỦ CONTAINER ĐÃ SẴN SÀNG:"
 docker ps --filter "network=ansible-lab"
