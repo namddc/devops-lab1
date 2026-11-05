@@ -1,0 +1,64 @@
+================================================================================
+BÀI THỰC HÀNH LAB 4: QUẢN LÝ CẤU HÌNH HẠ TẦNG VỚI ANSIBLE (CONFIGURATION MANAGEMENT)
+HỌC PHẦN: VẬN HÀNH VÀ BẢO TRÌ PHẦN MỀM (DEVOPS)
+================================================================================
+
+1. THÔNG TIN SINH VIÊN:
+   - Họ và tên: NGUYỄN VĂN NAM
+   - Mã số sinh viên (MSSV): DTC235180129
+   - Email: dtc235180129@ictu.edu.vn
+   - Lớp: K22
+   - Trường: Trường Đại học Công nghệ Thông tin & Truyền thông - Đại học Thái Nguyên (ICTU)
+
+2. THÔNG TIN MÔI TRƯỜNG THỰC HÀNH:
+   - Control Node: Ansible 9.x / Python 3.x
+   - Managed Nodes (Docker Container Network "ansible-lab"):
+     + web-server-1 : Port 2201 (SSH) -> Nhóm webservers (Apache Web Server)
+     + web-server-2 : Port 2202 (SSH) -> Nhóm webservers (Apache Web Server)
+     + db-server-1  : Port 2203 (SSH) -> Nhóm dbservers (Database Server)
+   - Phương thức kết nối: SSH (Port forwarding localhost, keyless/password auth)
+   - Base Image Managed Nodes: phamthuongdocker/ubuntu-sshd:22.04
+
+3. CÁC NỘI DUNG VÀ CHECKPOINT ĐÃ HOÀN THÀNH:
+   - [x] Bước 1: Dựng môi trường Managed Nodes (3 Docker Ubuntu SSH containers chạy trong network ansible-lab).
+   - [x] Bước 2: Xây dựng Inventory (inventory.ini) phân chia nhóm [webservers], [dbservers], [production:children], thiết lập biến kết nối [all:vars] và cấu hình ansible.cfg. Kiểm tra kết nối thành công: ansible all -m ping trả về "pong" từ 3 hosts.
+   - [x] Bước 3: Thực thi Ad-hoc Commands quản lý nhanh hàng loạt server:
+         + Kiểm tra OS version (Ubuntu 22.04) đồng loạt trên cả 3 node.
+         + Kiểm tra dung lượng ổ đĩa (df -h) và RAM (free -m).
+         + Cài đặt package curl đồng loạt trên cả 3 node bằng module apt.
+         + Phân phối file hello.txt đến các server web bằng module copy.
+   - [x] Bước 4: Viết và thực thi Playbook cấu hình Web Server (playbook-webserver.yml):
+         + Tự động cập nhật apt cache.
+         + Cài đặt máy chủ web Apache (apache2) và bật dịch vụ tự khởi động (service started & enabled).
+         + Triển khai trang web tùy chỉnh index.html.
+         + Kiểm tra thành công trang web Apache qua curl và browser: "DevOps Lab 4 — Ansible Managed!".
+   - [x] Bước 5: Viết và thực thi Full-Stack Playbook & Minh chứng Idempotency:
+         + Cài đặt bộ công cụ phát triển & giám sát (git, htop, vim, sysstat, net-tools).
+         + Triển khai file cấu hình /opt/myapp/config.env và script giám sát /opt/myapp/health-check.sh.
+         + Chạy script health-check in ra đầy đủ thông số sức khỏe hệ thống.
+         + Minh chứng tính Idempotency của Ansible: Chạy lại playbook lần 2 trả về "changed=0, ok=5", chứng minh Ansible không gây side-effect khi cấu hình đã đạt trạng thái mong muốn.
+   - [x] Bước 6: Dọn dẹp tài nguyên containers sau khi hoàn thành thực nghiệm.
+
+4. BÀI TẬP MỞ RỘNG ĐÃ TRIỂN KHAI (ĐIỂM CỘNG / XUẤT SẮC):
+   - [x] Mở rộng 1 - Ansible Handlers: Tích hợp handler "restart apache2" vào playbook-webserver.yml. Khi file template hoặc cấu hình web thay đổi, Ansible tự động kích hoạt thông báo (notify: restart apache2) để khởi động lại dịch vụ web tự động.
+   - [x] Mở rộng 2 - Jinja2 Templates (.j2): Chuyển đổi từ file tĩnh sang template động templates/index.html.j2. Tận dụng sức mạnh Jinja2 render động các thông số phần cứng & hệ thống: {{ ansible_hostname }}, {{ ansible_distribution }}, {{ ansible_architecture }}, {{ ansible_memtotal_mb }} và timestamp deploy.
+   - [x] Mở rộng 3 - Live Demo Simulator: Xây dựng giao diện mô phỏng tương tác trực quan demo-ansible-live.html giúp kiểm thử và demo trực tiếp các kịch bản với giao diện web thời gian thực.
+
+5. BẢNG SO SÁNH CỐT LÕI (IaC vs CONFIGURATION MANAGEMENT):
+   -----------------------------------------------------------------------------
+   Đặc điểm              Terraform (Bài 3)              Ansible (Bài 4)
+   -----------------------------------------------------------------------------
+   Phân loại             Provisioning (IaC)             Configuration Management
+   Nhiệm vụ chính        Khởi tạo server, network, S3   Cấu hình, cài đặt phần mềm bên trong
+   Trạng thái (State)    Quản lý qua terraform.tfstate  Agentless, kiểm tra thực tế (Idempotent)
+   Ngôn ngữ              HCL (HashiCorp Config Lang)    YAML (Human-readable)
+   Mô hình kết nối       API Cloud Provider             SSH / WinRM (Không cần agent)
+   -----------------------------------------------------------------------------
+
+6. DANH SÁCH ẢNH MINH CHỨNG (TRONG THƯ MỤC screenshots/):
+   - 01-ansible-ping.png          : Kết quả lệnh "ansible all -m ping" trả về pong từ cả 3 hosts.
+   - 02-adhoc-check.png           : Kết quả thực thi các lệnh Ad-hoc commands (os-release, df, curl).
+   - 03-playbook-webserver.png    : Kết quả chạy playbook-webserver.yml cài đặt Apache thành công.
+   - 04-playbook-full.png         : Kết quả chạy playbook-full.yml và thực thi script health-check.sh.
+   - 05-idempotent.png            : Minh chứng tính Idempotency: chạy lại playbook với changed=0.
+================================================================================

@@ -1,0 +1,87 @@
+================================================================================
+BÀI THỰC HÀNH LAB 5: QUẢN LÝ MÃ NGUỒN VỚI GIT FLOW & CODE REVIEW TRÊN GITHUB
+HỌC PHẦN: VẬN HÀNH VÀ BẢO TRÌ PHẦN MỀM (DEVOPS)
+================================================================================
+
+1. THÔNG TIN SINH VIÊN:
+   - Họ và tên: NGUYỄN VĂN NAM
+   - Mã số sinh viên (MSSV): DTC235180129
+   - Email: dtc235180129@ictu.edu.vn
+   - Lớp: K22
+   - Trường: Trường Đại học Công nghệ Thông tin & Truyền thông - Đại học Thái Nguyên (ICTU)
+   - GitHub: https://github.com/namddc
+   - Repository: https://github.com/namddc/devops-lab5-student-manager
+
+2. THÔNG TIN MÔI TRƯỜNG THỰC HÀNH:
+   - Hệ điều hành: Windows 11 Home Single Language (x64)
+   - Git Version: 2.45.0.windows.1
+   - Ngôn ngữ & Runtime: Python 3.13.7
+   - Công cụ phát triển: Visual Studio Code, Antigravity IDE
+   - Nền tảng SCM Remote: GitHub (https://github.com)
+   - Mô hình phân nhánh: Git Flow (main, develop, feature/add-student, feature/search-student, feature/update-readme-*)
+
+3. CÁC NỘI DUNG VÀ CHECKPOINT ĐÃ HOÀN THÀNH:
+   - [x] Bước 1: Cài đặt & Cấu hình môi trường Git:
+         + Kiểm tra Git version >= 2.40.
+         + Cấu hình danh tính toàn cục: user.name ("Nguyen Van Nam"), user.email ("dtc235180129@ictu.edu.vn").
+         + Thiết lập nhánh mặc định ban đầu init.defaultBranch = main.
+   - [x] Bước 2: Khởi tạo Repository & Kết nối GitHub:
+         + Khởi tạo kho Git cục bộ: git init -b main.
+         + Tạo file cấu hình loại trừ .gitignore (loại trừ __pycache__/, *.pyc, .env, .vscode/, *.log).
+         + Khởi tạo README.md ban đầu và tạo commit khởi tạo: "Initial commit: README + .gitignore".
+         + Kết nối remote origin: https://github.com/namddc/devops-lab5-student-manager.git.
+   - [x] Bước 3: Phát triển ứng dụng cơ bản (Chu trình add -> commit -> push -> pull):
+         + Xây dựng mô hình thực thể src/student.py (lớp Student đóng gói các thuộc tính student_id, name, age, grade, hàm __str__ và to_dict()).
+         + Tạo commit: "feat: add Student model class".
+         + Xây dựng file thực thi chính src/main.py khởi tạo danh sách sinh viên mẫu và hiển thị.
+         + Tạo commit: "feat: add main application entry point".
+   - [x] Bước 4: Thiết lập chiến lược Git Flow và phát triển tính năng song song:
+         + Tách nhánh tích hợp develop từ main: git checkout -b develop.
+         + Dev A (Feature Add Student): Tạo nhánh feature/add-student, phát triển hàm add_student() có cơ chế bắt lỗi và kiểm tra trùng lặp mã sinh viên.
+           Commit: "feat: add add_student function to main module".
+         + Dev B (Feature Search Student): Tạo nhánh feature/search-student, phát triển hàm search_student() hỗ trợ tìm kiếm không phân biệt hoa thường theo tên và mã.
+           Commit: "feat: add search_student function with keyword search".
+   - [x] Bước 5: Pull Request & Quy trình Code Review:
+         + Tạo Pull Request #1 (feature/add-student -> develop): Review logic thêm mới sinh viên, nghiệm thu và merge vào develop.
+         + Tạo Pull Request #2 (feature/search-student -> develop): Review tính năng tìm kiếm, nghiệm thu và merge vào develop.
+   - [x] Bước 6: Giả lập và giải quyết Xung đột mã nguồn (Merge Conflict):
+         + Dev A sửa dòng phiên bản trong README.md trên nhánh feature/update-readme-a ("Phát triển bởi Nhóm A").
+         + Dev B sửa cùng dòng đó trên nhánh feature/update-readme-b ("Phát triển bởi Nhóm B").
+         + Merge feature/update-readme-b vào develop thành công.
+         + Merge tiếp feature/update-readme-a vào develop gây ra xung đột (CONFLICT in README.md).
+         + Thực hiện xử lý xung đột thủ công trong VS Code: Kết hợp cả 2 đóng góp ("Phát triển bởi Nhóm A & Nhóm B").
+         + Hoàn tất commit giải quyết: "merge: resolve README conflict — combine Team A & B".
+   - [x] Bước 7: Tổng kết, Release và Hoàn thiện tài liệu:
+         + Gộp toàn bộ mã nguồn hoàn chỉnh từ develop vào main: git merge --no-ff develop.
+         + Viết tài liệu README.md hoàn chỉnh chuẩn công nghiệp (giới thiệu, tính năng, hướng dẫn cài đặt/chạy, công nghệ, tác giả).
+         + Tạo commit: "docs: complete README with project info".
+         + Kiểm tra cây đồ thị nhánh: git log --oneline --graph --all thể hiện chuẩn xác 100% cấu trúc Git Flow.
+
+4. BÀI TẬP MỞ RỘNG ĐÃ TRIỂN KHAI (ĐIỂM CỘNG / XUẤT SẮC):
+   - [x] Mở rộng 1 - Conventional Commits: Toàn bộ 13 commit trong kho đều tuân thủ chuẩn Conventional Commits quốc tế với các tiền tố rõ ràng: feat (tính năng mới), docs (cập nhật tài liệu), fix (sửa lỗi encoding console), merge (giải quyết xung đột nhánh).
+   - [x] Mở rộng 2 - An toàn dữ liệu với .gitignore chuyên sâu: Loại trừ các tệp nhạy cảm (.env), tệp môi trường ảo (venv/), các file cache nhị phân compiled (*.pyc, __pycache__/), và các cấu hình editor cá nhân (.vscode/).
+   - [x] Mở rộng 3 - UTF-8 Console Cross-Platform Fix: Bổ sung đoạn mã tự động điều chỉnh encoding chuẩn UTF-8 trong src/main.py, đảm bảo ứng dụng hiển thị tiếng Việt có dấu hoàn hảo trên mọi console Windows (Command Prompt, PowerShell, VS Code Terminal) mà không xảy ra lỗi charmap codec.
+
+5. BẢNG SO SÁNH CỐT LÕI (GIT FLOW vs GITHUB FLOW vs TRUNK-BASED DEVELOPMENT):
+   -------------------------------------------------------------------------------------------------------
+   Tiêu chí               Git Flow (Áp dụng Lab 5)        GitHub Flow                Trunk-Based Development
+   -------------------------------------------------------------------------------------------------------
+   Độ phức tạp nhánh      Cao (main, develop, feature,    Thấp (main + feature)      Rất thấp (chỉ main/trunk)
+                          release, hotfix)
+   Tần suất Release       Theo phiên bản định kỳ          Liên tục (CD)              Nhiều lần trong ngày
+   Môi trường phù hợp     Phần mềm đóng gói, Enterprise,  Web Apps, SaaS, Startup    Hệ thống CI/CD tự động cao,
+                          ứng dụng di động, học viện      hiện đại                   DevOps trưởng thành
+   Xử lý Conflict         Tại develop / release           Tại Pull Request           Rất ít nhờ commit nhỏ và liên tục
+   Code Review            Tại PR vào develop              Tại PR vào main            Pair programming hoặc review sau
+   -------------------------------------------------------------------------------------------------------
+
+6. DANH SÁCH ẢNH MINH CHỨNG (TRONG THƯ MỤC screenshots/):
+   - 01-git-log.png           : Đồ thị commit trực quan (git log --oneline --graph --all) thể hiện đủ nhánh.
+   - 02-git-branch.png        : Danh sách các nhánh trong dự án (git branch -a).
+   - 03-pr-add-student.png    : Minh chứng Pull Request #1 tính năng add_student.
+   - 04-pr-search-student.png : Minh chứng Pull Request #2 tính năng search_student.
+   - 05-code-review.png       : Minh chứng Code Review và phê duyệt (Approve) Pull Request.
+   - 06-merge-conflict.png    : Trạng thái xung đột mã nguồn (Conflict Markers <<<<<<< HEAD ... >>>>>>>).
+   - 07-conflict-resolved.png : Trạng thái sau khi giải quyết xung đột thành công và commit sạch sẽ.
+   - 08-final-output.png      : Kết quả thực thi ứng dụng python src/main.py chạy mượt mà, đầy đủ kết quả.
+================================================================================

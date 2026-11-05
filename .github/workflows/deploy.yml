@@ -27,11 +27,11 @@ jobs:
       - name: 📦 Checkout Code
         uses: actions/checkout@v4
 
-      # Step 2: Kiểm tra HTML và tài nguyên cơ bản
+      # Step 2: Kiểm tra HTML và tài nguyên cơ bản của Lab 1
       - name: 🧪 Validate Files (HTML & Assets)
         run: |
-          echo "=== KIỂM TRA MÃ NGUỒN VÀ TÀI NGUYÊN ==="
-          for file in index.html about.html contact.html avatar.png; do
+          echo "=== KIỂM TRA MÃ NGUỒN VÀ TÀI NGUYÊN LAB 1 ==="
+          for file in lab1/index.html lab1/about.html lab1/contact.html lab1/avatar.png; do
             if [ -f "$file" ]; then
               echo "✅ $file found! (Size: $(wc -c < "$file") bytes)"
             else
@@ -39,21 +39,21 @@ jobs:
               exit 1
             fi
           done
-          echo "🎉 Tất cả các trang HTML và avatar đã sẵn sàng!"
+          echo "🎉 Tất cả các trang HTML và avatar Lab 1 đã sẵn sàng!"
 
       # Step 3: Google Lighthouse CI Audit (Bài tập mở rộng)
       - name: 🔍 Audit với Google Lighthouse CI
         uses: treosh/lighthouse-ci-action@v12
         continue-on-error: true
         with:
-          configPath: './lighthouserc.json'
+          configPath: './lab1/lighthouserc.json'
           uploadArtifacts: true
 
-      # Step 4: Deploy lên GitHub Pages
+      # Step 4: Deploy lên GitHub Pages từ thư mục lab1
       - name: 🚀 Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
+          publish_dir: ./lab1
           publish_branch: gh-pages
           commit_message: "Auto-deploy: Multi-page, Avatar and Lighthouse CI [skip ci]"

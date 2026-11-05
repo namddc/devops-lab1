@@ -1,0 +1,28 @@
+================================================================================
+BÀI THỰC HÀNH LAB 1: TRẢI NGHIỆM DEVOPS WORKFLOW END-TO-END
+HỌC PHẦN: VẬN HÀNH VÀ BẢO TRÌ PHẦN MỀM (DEVOPS)
+================================================================================
+
+1. THÔNG TIN SINH VIÊN:
+   - Họ và tên: NGUYỄN VĂN NAM
+   - Mã số sinh viên (MSSV): DTC235180129
+   - Email: dtc235180129@ictu.edu.vn
+   - Trường: Trường Đại học Công nghệ Thông tin & Truyền thông - Đại học Thái Nguyên (ICTU)
+
+2. THÔNG TIN BÀI THỰC HÀNH:
+   - GitHub Repository: https://github.com/namddc/devops-lab1
+   - Website GitHub Pages (Trực tuyến): https://namddc.github.io/devops-lab1/
+   - GitHub Actions CI/CD Pipeline: https://github.com/namddc/devops-lab1/actions
+   - Nhánh triển khai tự động: gh-pages
+
+3. KẾT QUẢ TRIỂN KHAI CI/CD:
+   - Pipeline 1 (Initial Deploy): Run ID 38495230776 - Trạng thái: Completed (Success)
+   - Pipeline 2 (Auto Update Test): Run ID 38495819846 - Trạng thái: Completed (Success)
+   - Pipeline 3 (Bài tập mở rộng): Run ID 38570263555 - Trạng thái: Completed (Success)
+
+4. CÁC TÍNH NĂNG MỞ RỘNG ĐÃ TRIỂN KHAI:
+   - [x] Thêm ảnh đại diện cá nhân thực tế (avatar.png) với viền bo tròn glow hiện đại.
+   - [x] Phát triển hệ thống đa trang Multi-page: index.html, about.html, contact.html.
+   - [x] Thanh điều hướng Navigation Bar kiểu pill mượt mà, chuyển trang responsive.
+   - [x] Tích hợp Google Lighthouse CI kiểm toán chất lượng web tự động, xuất Artifacts.
+================================================================================
