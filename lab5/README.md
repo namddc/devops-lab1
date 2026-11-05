@@ -2,7 +2,7 @@
 
 Ứng dụng quản lý sinh viên — DevOps Lab 5
 
-**Version 1.0.0** — Phát triển bởi Nhóm A & Nhóm B
+**Version 1.0.0** — Phát triển bởi Nhóm A (Dev A: Nguyễn Văn Nam - DTC235180129)
 
 ## 1. Giới thiệu
 Ứng dụng Student Manager được phát triển bằng Python, minh họa quản lý mã nguồn chuyên nghiệp bằng Git & GitHub theo mô hình Git Flow.
