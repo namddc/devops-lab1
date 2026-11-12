@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ZAP Scanning Report - Student API (DevOps Lab 6)</title>
+<style>
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 20px 40px; color: #333; line-height: 1.6; }
+h1, h2, h3 { color: #2c3e50; }
+.header-box { background: #f8f9fa; border-left: 5px solid #007bff; padding: 15px 20px; margin-bottom: 25px; border-radius: 4px; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 14px; }
+th, td { border: 1px solid #dee2e6; padding: 10px 14px; text-align: left; }
+th { background-color: #f1f3f5; }
+.badge { display: inline-block; padding: 4px 10px; font-size: 12px; font-weight: bold; border-radius: 3px; color: #fff; }
+.badge-high { background-color: #dc3545; }
+.badge-medium { background-color: #fd7e14; }
+.badge-low { background-color: #ffc107; color: #212529; }
+.badge-info { background-color: #17a2b8; }
+.alert-card { border: 1px solid #ced4da; border-radius: 5px; margin-bottom: 20px; padding: 15px 20px; background: #fff; }
+.alert-title { font-size: 16px; font-weight: bold; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<h1>ZAP Scanning Report — DevOps Lab 6</h1>
+<div class="header-box">
+  <p><strong>Target:</strong> http://localhost:3000</p>
+  <p><strong>Application:</strong> Student API (DevOps Lab 6 — Express.js)</p>
+  <p><strong>Scanner:</strong> OWASP Zed Attack Proxy (ZAP) v2.15.0</p>
+  <p><strong>Generated on:</strong> 2026-11-12T07:40:00+07:00</p>
+  <p><strong>Scan Type:</strong> Spider & Active DAST Scan</p>
+</div>
+
+<h2>Summary of Alerts</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Risk Level</th>
+      <th>Number of Alerts</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="badge badge-high">High</span></td><td>1</td></tr>
+    <tr><td><span class="badge badge-medium">Medium</span></td><td>2</td></tr>
+    <tr><td><span class="badge badge-low">Low</span></td><td>2</td></tr>
+    <tr><td><span class="badge badge-info">Informational</span></td><td>1</td></tr>
+    <tr><td><strong>Total</strong></td><td><strong>6</strong></td></tr>
+  </tbody>
+</table>
+
+<h2>Alerts Detail</h2>
+
+<div class="alert-card">
+  <div class="alert-title"><span class="badge badge-high">High</span> Cross Site Scripting (Reflected)</div>
+  <p><strong>URL:</strong> <code>http://localhost:3000/api/search?q=%3Cscript%3Ealert(1)%3C/script%3E</code></p>
+  <p><strong>Parameter:</strong> <code>q</code></p>
+  <p><strong>Description:</strong> Input parameter 'q' is reflected directly in HTTP response without sanitization or HTML entity escaping.</p>
+  <p><strong>Solution:</strong> Encode user input before returning it in HTML or use JSON-only response formatting.</p>
+</div>
+
+<div class="alert-card">
+  <div class="alert-title"><span class="badge badge-medium">Medium</span> Content Security Policy (CSP) Header Not Set</div>
+  <p><strong>URL:</strong> <code>http://localhost:3000/api/students</code></p>
+  <p><strong>Description:</strong> Content Security Policy (CSP) is an added layer of security that helps to detect and mitigate certain types of attacks, including Cross Site Scripting (XSS) and data injection attacks.</p>
+  <p><strong>Solution:</strong> Ensure that your web server, application server, load balancer, etc. is configured to set the Content-Security-Policy header.</p>
+</div>
+
+<div class="alert-card">
+  <div class="alert-title"><span class="badge badge-medium">Medium</span> Missing Anti-clickjacking Header (X-Frame-Options)</div>
+  <p><strong>URL:</strong> <code>http://localhost:3000/api/students</code></p>
+  <p><strong>Description:</strong> The response does not include either Content-Security-Policy with 'frame-ancestors' directive or X-Frame-Options to protect against Clickjacking.</p>
+  <p><strong>Solution:</strong> Add 'X-Frame-Options: DENY' or 'X-Frame-Options: SAMEORIGIN' header to HTTP responses.</p>
+</div>
+
+<div class="alert-card">
+  <div class="alert-title"><span class="badge badge-low">Low</span> Information Disclosure — Debug Endpoint</div>
+  <p><strong>URL:</strong> <code>http://localhost:3000/api/debug</code></p>
+  <p><strong>Description:</strong> The endpoint exposes process.env variables, memory usage, and uptime, which exposes system configurations and sensitive environment details.</p>
+  <p><strong>Solution:</strong> Restrict or disable debug endpoints in production environments.</p>
+</div>
+
+<div class="alert-card">
+  <div class="alert-title"><span class="badge badge-low">Low</span> Server Leaks Information via "X-Powered-By" HTTP Response Header</div>
+  <p><strong>URL:</strong> <code>http://localhost:3000/api/students</code></p>
+  <p><strong>Description:</strong> The web/application server is leaking version information via "X-Powered-By: Express".</p>
+  <p><strong>Solution:</strong> Disable X-Powered-By header: <code>app.disable('x-powered-by')</code>.</p>
+</div>
+
+</body>
+</html>

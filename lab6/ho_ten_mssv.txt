@@ -1,0 +1,91 @@
+================================================================================
+BÀI THỰC HÀNH LAB 6: KIỂM THỬ & PHÂN TÍCH MÃ NGUỒN TĨNH TRONG DEVOPS
+HỌC PHẦN: VẬN HÀNH VÀ BẢO TRÌ PHẦN MỀM (DEVOPS)
+================================================================================
+
+1. THÔNG TIN SINH VIÊN THỰC HIỆN:
+   - Họ và tên: NGUYỄN VĂN NAM
+   - Mã số sinh viên (MSSV): DTC235180129
+   - Lớp: K22
+   - Email: dtc235180129@ictu.edu.vn
+   - GitHub Profile: https://github.com/namddc
+   - Repository: https://github.com/namddc/devops-lab1
+   - Thư mục Lab: devops-lab1/lab6
+   - Trường: Trường Đại học Công nghệ Thông tin & Truyền thông - Đại học Thái Nguyên (ICTU)
+   - Giảng viên phụ trách: Cô Phạm Thương
+
+2. THÔNG TIN MÔI TRƯỜNG THỰC HIỆN:
+   - Hệ điều hành: Windows 11 (x64) & GitHub Codespaces (Linux/Docker)
+   - Node.js Version: v24.13.0
+   - npm Version: 11.6.2
+   - Newman CLI Version: 6.2.3
+   - OWASP ZAP Version: 2.15.0
+   - SonarQube: LTS Community
+   - Postman: Postman for Windows
+
+3. CÁC NỘI DUNG VÀ CHECKPOINT ĐÃ HOÀN THÀNH:
+   [x] BƯỚC 1: Chuẩn bị môi trường & Xây dựng Sample API (Node.js + Express)
+       - Xây dựng file server.js cung cấp đầy đủ các RESTful API endpoints:
+         + GET    /api/students (Lấy danh sách sinh viên)
+         + GET    /api/students/:id (Lấy thông tin sinh viên theo mã)
+         + POST   /api/students (Thêm sinh viên mới, có kiểm tra validate thiếu trường)
+         + PUT    /api/students/:id (Cập nhật thông tin sinh viên)
+         + DELETE /api/students/:id (Xóa sinh viên)
+         + GET    /api/search?q= (Mô phỏng lỗi Reflected XSS)
+         + GET    /api/debug (Lộ cấu hình process.env, memory)
+       - Chạy API thành công trên cổng 3000.
+
+   [x] BƯỚC 2: Kiểm thử chức năng API với Postman + Newman CLI (Functional Testing)
+       - Thiết kế Postman Collection (Student-API-Tests.json) gồm 5 requests:
+         1. GET All Students (Verify Status 200, schema response, array length >= 3, response time < 200ms)
+         2. GET Student by ID (Verify Status 200, return correct student name "Nguyen Van A")
+         3. POST Create Student (Verify Status 201, verify created student name "Pham Thi D")
+         4. GET Student Not Found (Verify Status 404, success: false)
+         5. POST Missing Fields Validation (Verify Status 400 Bad Request)
+       - Chạy tự động bằng Newman CLI: 5/5 requests thành công, 12/12 assertions passed (100% pass rate).
+       - Xuất báo cáo tự động ra file: newman-report.json.
+
+   [x] BƯỚC 3: Kiểm thử bảo mật động với OWASP ZAP (DAST - Dynamic Security Testing)
+       - Quét tự động Spider & Active Scan trên endpoint API: http://localhost:3000.
+       - Phát hiện và phân tích các lỗ hổng an ninh:
+         + High: Cross Site Scripting (Reflected) tại /api/search?q=
+         + Medium: Content Security Policy (CSP) Header Not Set
+         + Medium: Missing Anti-clickjacking Header (X-Frame-Options)
+         + Low: Information Disclosure tại /api/debug
+         + Low: Server Leaks Information via "X-Powered-By: Express"
+       - Xuất báo cáo an ninh: zap-report.html.
+
+   [x] BƯỚC 4: Phân tích mã nguồn tĩnh với SonarQube (SAST - Static Application Security Testing)
+       - Cấu hình file sonar-project.properties với projectKey=devops-lab6.
+       - Chạy SonarScanner phân tích mã nguồn server.js.
+       - Đánh giá chất lượng mã: phát hiện Code Smells, Security Hotspots (debug endpoint, CORS wildcard), Bugs.
+
+   [x] BƯỚC 5: Tự động hóa tích hợp vào CI Testing Pipeline
+       - Xây dựng kịch bản CI test (ci-test.sh và ci-test.ps1) liên kết tuần tự:
+         Stage 1: SAST (SonarQube Scanner)
+         Stage 2: Khởi động API Server
+         Stage 3: Functional Test (Newman CLI)
+         Stage 4: DAST (OWASP ZAP Scan)
+         Stage 5: Dọn dẹp tiến trình server và tổng hợp báo cáo.
+
+   [x] BƯỚC 6: Bảng so sánh và kết luận 3 loại kiểm thử trong DevOps.
+
+4. BẢNG SO SÁNH 3 LOẠI KIỂM THỬ TRONG DEVOPS:
+------------------------------------------------------------------------------------------------------------------------
+| Tiêu chí              | Postman / Newman CLI        | OWASP ZAP (DAST)           | SonarQube (SAST)                  |
+|-----------------------|-----------------------------|----------------------------|-----------------------------------|
+| Phân loại kiểm thử    | Functional Testing          | Dynamic Security Testing   | Static Application Security Test  |
+| Có cần chạy ứng dụng? | CÓ (Chạy trên live API)     | CÓ (Gửi request tấn công)  | KHÔNG (Chỉ phân tích cú pháp code)|
+| Phát hiện lỗi gì?     | Sai logic, sai status code, | XSS, SQLi, CSRF, thiếu     | Bugs tiềm ẩn, Code Smells,       |
+|                       | sai format dữ liệu trả về   | Security Headers an ninh   | Security Hotspots, bảo trì kém    |
+| Cần mã nguồn (Code)?  | KHÔNG (Chỉ cần URL/Endpoint)| KHÔNG (Chỉ cần URL/Endpoint| CÓ (Cần toàn bộ file mã nguồn)    |
+| Giai đoạn trong CI/CD | Sau khi Deploy (Post-deploy)| Sau khi Deploy (Staging)   | Rất sớm, TRƯỚC khi Build (Early)  |
+| Thời gian chạy        | Rất nhanh (~1 - 2 giây)     | Trung bình (~30 - 60 giây) | Nhanh (~20 - 40 giây)             |
+| Khả năng tự động hóa  | Rất cao (Newman CLI)        | Rất cao (ZAP API / CLI)    | Rất cao (SonarScanner / Actions)  |
+------------------------------------------------------------------------------------------------------------------------
+
+5. KẾT LUẬN VẬN DỤNG DEVOPS:
+   - "Shift-Left Testing": Đưa SAST (SonarQube) vào chạy ngay từ khâu viết code/tạo Pull Request giúp sửa lỗi rẻ và nhanh nhất.
+   - API Functional Test (Newman) bảo đảm tính đúng đắn của hợp đồng dữ liệu giữa frontend và backend.
+   - DAST (OWASP ZAP) kiểm tra ứng dụng ở góc độ của một kẻ tấn công thực tế từ bên ngoài vào môi trường đang chạy.
+   - Cả 3 phương pháp bổ trợ cho nhau tạo nên quy trình DevSecOps toàn diện.

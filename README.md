@@ -22,6 +22,7 @@
 | [📁 **lab1/**](./lab1/) | **CI/CD Pipeline & GitHub Pages** | GitHub Actions, YAML, Lighthouse CI, GitHub Pages | ✅ Hoàn thành |
 | [📁 **lab4/**](./lab4/) | **Quản lý Cấu hình Hạ tầng (Configuration Management)** | Ansible, YAML, Jinja2 Templates, Docker SSH Nodes, Idempotency | ✅ Hoàn thành |
 | [📁 **lab5/**](./lab5/) | **Quản lý Mã nguồn với Git Flow & Code Review** | Git Flow, Feature Branching, Pull Request, Merge Conflict, Python | ✅ Hoàn thành |
+| [📁 **lab6/**](./lab6/) | **Kiểm thử & Phân tích Mã nguồn Tĩnh trong DevOps** | Node.js Express, Postman/Newman, OWASP ZAP (DAST), SonarQube (SAST), CI Automation | ✅ Hoàn thành |
 
 ---
 
@@ -44,6 +45,14 @@
 - Quy trình Pull Request và Code Review chuẩn công nghiệp.
 - Mô phỏng và giải quyết xung đột mã nguồn (Merge Conflict) trong `README.md`.
 - Minh chứng đầy đủ qua 8 ảnh chụp màn hình trong `lab5/screenshots/`.
+
+### 4. [Lab 6 — Kiểm thử & Phân tích Mã nguồn Tĩnh trong DevOps](./lab6/)
+- Xây dựng REST API sinh viên bằng Node.js Express với các endpoint chuẩn và điểm mô phỏng an ninh.
+- Kiểm thử chức năng API với Postman & Newman CLI tự động (12 assertions pass 100%).
+- Quét lỗ hổng bảo mật động DAST với OWASP ZAP (phát hiện XSS, thiếu CSP, Header an ninh).
+- Phân tích mã nguồn tĩnh SAST với SonarQube & SonarScanner (Bugs, Code Smells, Hotspots).
+- Tích hợp tự động hóa qua kịch bản CI Pipeline (`ci-test.ps1` / `ci-test.sh`).
+- Minh chứng đầy đủ qua 5 ảnh chụp màn hình trong `lab6/screenshots/`.
 
 ---
 
