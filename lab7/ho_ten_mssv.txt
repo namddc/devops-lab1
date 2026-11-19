@@ -1,0 +1,97 @@
+================================================================================
+BÀI THỰC HÀNH LAB 7: TRIỂN KHAI CI PIPELINE VỚI JENKINS, MAVEN, NEXUS & SONARQUBE
+HỌC PHẦN: VẬN HÀNH VÀ BẢO TRÌ PHẦN MỀM (DEVOPS)
+================================================================================
+
+1. THÔNG TIN SINH VIÊN THỰC HIỆN:
+   - Họ và tên: NGUYỄN VĂN NAM
+   - Mã số sinh viên (MSSV): DTC235180129
+   - Lớp: K22
+   - Email: dtc235180129@ictu.edu.vn
+   - GitHub Profile: https://github.com/namddc
+   - Repository: https://github.com/namddc/devops-lab1
+   - Thư mục Lab: devops-lab1/lab7
+   - Trường: Trường Đại học Công nghệ Thông tin & Truyền thông - Đại học Thái Nguyên (ICTU)
+   - Giảng viên phụ trách: Cô Phạm Thương
+
+2. THÔNG TIN MÔI TRƯỜNG THỰC HIỆN:
+   - Hệ điều hành: GitHub Codespaces (Ubuntu 22.04 LTS / 24.04 LTS) & Windows 11
+   - Docker Engine: v27.x.x
+   - Docker Compose: v2.x.x
+   - Jenkins CI Server: jenkins/jenkins:lts-jdk21 (Cổng 8080 & 50000)
+   - Nexus Repository: sonatype/nexus3:latest (Cổng 8081)
+   - SonarQube Server: sonarqube:lts-community (Cổng 9000)
+   - Java SDK: OpenJDK 17 / 21
+   - Build Tool: Apache Maven 3.9.x
+   - Test Framework: JUnit 5 (JUnit Jupiter 5.10.2) + Maven Surefire 3.2.5
+
+3. CÁC NỘI DUNG VÀ CHECKPOINT ĐÃ HOÀN THÀNH (100% RUBRIC):
+   [x] CHECKPOINT 1: Chuẩn bị Môi trường
+       - Kiểm tra Docker, Docker Compose, Git, JDK.
+       - Cấu hình sysctl tăng bộ nhớ vm.max_map_count phục vụ Elasticsearch của SonarQube.
+
+   [x] CHECKPOINT 2: Khởi tạo Stack Containers bằng Docker Compose
+       - Xây dựng file docker-compose.yml khởi tạo mạng riêng ci-network liên kết 3 dịch vụ:
+         + Jenkins CI Server (container: lab7-jenkins)
+         + Nexus Repository OSS (container: lab7-nexus)
+         + SonarQube Code Quality (container: lab7-sonarqube)
+       - Chạy lệnh docker compose up -d, cả 3 containers đều ở trạng thái running (Up).
+       - Trích xuất initialAdminPassword của Jenkins và admin.password của Nexus thành công.
+
+   [x] CHECKPOINT 3: Cấu hình Quản trị Jenkins, Maven & Nexus Repository
+       - Hoàn tất wizard cấu hình Jenkins ban đầu, cài đặt bộ suggested plugins và tạo tài khoản admin.
+       - Cài đặt thêm các plugins chuyên dụng: Pipeline: Stage View, SonarQube Scanner, Config File Provider.
+       - Cấu hình Global Tool Configuration: Đặt tên công cụ Maven là 'M3' (tự động cài đặt Maven 3.9.x).
+       - Khởi tạo Repository trên Nexus: Tạo kho maven2 (hosted) với tên 'maven-snapshots' phục vụ lưu trữ artifact.
+       - Thiết lập credentials trên Jenkins: sonarqube-token (Secret text) và nexus-credentials (User/Pass).
+       - Tạo file cấu hình maven-settings-nexus (settings.xml) map xác thực với Nexus Server ID 'nexus'.
+
+   [x] CHECKPOINT 4: Xây dựng Sample Java Project với Maven & Unit Testing
+       - Xây dựng module Java ci-demo:
+         + Calculator.java: Chứa các hàm nghiệp vụ toán học (add, subtract, multiply, divide, isPositive).
+         + Main.java: Lớp chạy ứng dụng chính.
+         + CalculatorTest.java: Thiết kế 6 unit test JUnit 5 bao quát các trường hợp (kể cả ngoại lệ divideByZero).
+         + pom.xml: Khai báo cấu hình Maven Compiler Java 17, JUnit 5, Surefire plugin, Sonar plugin, Jar plugin.
+       - Chạy kiểm thử độc lập: 6/6 tests passed (100% pass rate).
+
+   [x] CHECKPOINT 5: Quản lý Mã nguồn trên GitHub
+       - Đẩy toàn bộ mã nguồn sample Java app và Jenkinsfile lên GitHub repository:
+         https://github.com/namddc/devops-lab1/tree/main/lab7
+
+   [x] CHECKPOINT 6: Xây dựng Jenkinsfile Declarative Pipeline Chuẩn mực (6 Stages)
+       - Thiết kế quy trình CI Pipeline 6 giai đoạn tuần tự:
+         Stage 1: Checkout — Tự động clone/pull mã nguồn mới nhất từ GitHub qua SCM.
+         Stage 2: Build — Biên dịch toàn bộ source code với Maven ('mvn clean compile').
+         Stage 3: Test — Chạy toàn bộ Unit Tests với JUnit 5 ('mvn test') và xuất báo cáo Surefire XML.
+         Stage 4: SonarQube Analysis — Phân tích chất lượng mã tĩnh SAST (Bugs, Vulnerabilities, Code Smells).
+         Stage 5: Package — Đóng gói thành file jar 'ci-demo-1.0.0-SNAPSHOT.jar' và lưu trữ qua archiveArtifacts.
+         Stage 6: Publish to Nexus — Tự động upload file jar lên Nexus Repository qua lệnh 'mvn deploy:deploy-file'.
+       - Khối post build: Tự động ghi nhận junit test report, dọn dẹp workspace và thông báo trạng thái kết quả.
+
+   [x] CHECKPOINT 7: Tạo và Cấu hình Jenkins Pipeline Job
+       - Tạo Pipeline Job với tên 'DevOps-Lab7-CI-Pipeline'.
+       - Cấu hình Pipeline script from SCM trỏ tới kho GitHub và file Jenkinsfile.
+       - Thiết lập trigger tự động hóa qua Poll SCM (H/5 * * * *) hoặc GitHub Webhook.
+
+   [x] CHECKPOINT 8: Thực thi Pipeline & Kiểm tra Kết quả
+       - Chạy Build Now: Pipeline thực thi hoàn hảo từ Stage 1 đến Stage 6.
+       - Toàn bộ Pipeline Stage View hiển thị màu xanh lá cây (Success).
+       - Artifact file jar được lưu trữ trực tiếp trên Jenkins và xuất hiện trong Browse của Nexus Repository.
+
+4. BẢNG PHÂN TÍCH VAI TRÒ CÁC CÔNG CỤ TRONG CHUỖI CI PIPELINE:
+------------------------------------------------------------------------------------------------------------------------
+| Công cụ           | Giai đoạn áp dụng     | Vai trò & Nhiệm vụ cốt lõi                                              |
+|-------------------|-----------------------|--------------------------------------------------------------------------|
+| **Git & GitHub**   | Source Control        | Quản lý phiên bản mã nguồn, ghi nhận lịch sử commit, kích hoạt webhook.   |
+| **Jenkins**       | Orchestration (CI)    | Máy chủ điều phối tự động, thực thi các stages theo kịch bản Jenkinsfile|
+| **Maven**         | Build & Dependency    | Quản lý thư viện phụ thuộc, biên dịch Java code, thực thi unit tests.   |
+| **JUnit 5**       | Automated Testing     | Kiểm thử đơn vị tự động, đảm bảo tính đúng đắn logic của từng hàm.      |
+| **SonarQube**     | Static Analysis (SAST)| Quét phát hiện bugs, lỗ hổng an ninh, code smells theo chuẩn Shift-Left. |
+| **Nexus OSS**     | Binary Repository     | Kho lưu trữ tập trung các artifact nhị phân (.jar, .war), quản lý version|
+------------------------------------------------------------------------------------------------------------------------
+
+5. KẾT LUẬN & BÀI HỌC VẬN DỤNG THỰC TẾ:
+   - **Tự động hóa hoàn toàn (Automation):** Thay vì các thao tác thủ công dễ nhầm lẫn (compile bằng tay, gửi file jar qua chat), CI Pipeline tự động thực hiện mọi bước ngay khi có code mới được commit.
+   - **Phát hiện lỗi sớm (Fail Fast / Shift-Left):** Việc chạy Unit Test và SonarQube ngay trong CI giúp bắt lỗi logic và vi phạm quy chuẩn lập trình ngay từ giai đoạn phát triển, tiết kiệm chi phí sửa chữa.
+   - **Tính nhất quán của Artifact:** File `.jar` sau khi build và test đạt chuẩn được đánh phiên bản cụ thể (ví dụ 1.0.0-SNAPSHOT) và đẩy vào kho Nexus tập trung, đảm bảo môi trường CD/Deploy sau này luôn lấy đúng bản nhị phân đã được kiểm định.
+

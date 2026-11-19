@@ -1,4 +1,4 @@
-# HỌC PHẦN: VẬN HÀNH VÀ BẢO TRÌ PHẦN MỀM (DEVOPS)
+﻿# HỌC PHẦN: VẬN HÀNH VÀ BẢO TRÌ PHẦN MỀM (DEVOPS)
 
 **Kho lưu trữ các bài thực hành DevOps — Trường Đại học Công nghệ Thông tin & Truyền thông (ICTU)**
 
@@ -23,6 +23,7 @@
 | [📁 **lab4/**](./lab4/) | **Quản lý Cấu hình Hạ tầng (Configuration Management)** | Ansible, YAML, Jinja2 Templates, Docker SSH Nodes, Idempotency | ✅ Hoàn thành |
 | [📁 **lab5/**](./lab5/) | **Quản lý Mã nguồn với Git Flow & Code Review** | Git Flow, Feature Branching, Pull Request, Merge Conflict, Python | ✅ Hoàn thành |
 | [📁 **lab6/**](./lab6/) | **Kiểm thử & Phân tích Mã nguồn Tĩnh trong DevOps** | Node.js Express, Postman/Newman, OWASP ZAP (DAST), SonarQube (SAST), CI Automation | ✅ Hoàn thành |
+| [📁 **lab7/**](./lab7/) | **Triển khai CI Pipeline với Jenkins, Maven, Nexus & SonarQube** | Jenkins Declarative Pipeline, Maven, JUnit 5, SonarQube SAST, Nexus Repository, Docker Compose | ✅ Hoàn thành |
 
 ---
 
@@ -54,6 +55,13 @@
 - Tích hợp tự động hóa qua kịch bản CI Pipeline (`ci-test.ps1` / `ci-test.sh`).
 - Minh chứng đầy đủ qua 5 ảnh chụp màn hình trong `lab6/screenshots/`.
 
+### 5. [Lab 7 — Triển khai CI Pipeline với Jenkins, Maven, Nexus & SonarQube](./lab7/)
+- Xây dựng chuỗi CI Pipeline tự động 6 giai đoạn (Checkout -> Build -> Test -> SonarQube -> Package -> Publish Nexus).
+- Biên dịch và kiểm thử tự động ứng dụng Java Calculator với JUnit 5 (6/6 tests pass).
+- Tích hợp phân tích mã tĩnh SonarQube SAST tự động phát hiện sớm Bugs, Code Smells, Hotspots.
+- Đóng gói file .jar và đẩy artifact nhị phân lên kho lưu trữ Nexus Repository Manager.
+- Minh chứng đầy đủ qua 8 ảnh chụp màn hình trong `lab7/screenshots/`.
+
 ---
 
 ## 🚀 Hướng dẫn chạy thử nghiệm nhanh (Quick Start)
@@ -69,6 +77,12 @@ python src/main.py
 cd lab4
 ansible all -m ping
 ansible-playbook playbook-webserver.yml
+```
+
+### Khởi chạy môi trường Lab 7 (Jenkins, Nexus, SonarQube):
+```bash
+cd lab7
+docker-compose up -d
 ```
 
 ---

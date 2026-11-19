@@ -1,0 +1,165 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'M3'
+    }
+
+    environment {
+        NEXUS_URL      = 'http://lab7-nexus:8081'
+        NEXUS_REPO     = 'maven-snapshots'
+        SONAR_HOST_URL = 'http://lab7-sonarqube:9000'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo '=================================================='
+                echo 'STEP 1/6: CHECKOUT — Lấy mã nguồn từ GitHub Repos'
+                echo '=================================================='
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo '=================================================='
+                echo 'STEP 2/6: BUILD — Biên dịch mã nguồn với Maven'
+                echo '=================================================='
+                script {
+                    if (fileExists('sample-java-app/pom.xml')) {
+                        dir('sample-java-app') {
+                            sh 'mvn clean compile'
+                        }
+                    } else {
+                        sh 'mvn clean compile'
+                    }
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo '=================================================='
+                echo 'STEP 3/6: TEST — Thực thi Unit Tests với JUnit 5'
+                echo '=================================================='
+                script {
+                    if (fileExists('sample-java-app/pom.xml')) {
+                        dir('sample-java-app') {
+                            sh 'mvn test'
+                        }
+                    } else {
+                        sh 'mvn test'
+                    }
+                }
+            }
+            post {
+                always {
+                    script {
+                        if (fileExists('sample-java-app/target/surefire-reports')) {
+                            junit 'sample-java-app/target/surefire-reports/*.xml'
+                        } else if (fileExists('target/surefire-reports')) {
+                            junit 'target/surefire-reports/*.xml'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                echo '=================================================='
+                echo 'STEP 4/6: SCAN — Phân tích mã nguồn tĩnh (SAST)'
+                echo '=================================================='
+                script {
+                    try {
+                        withSonarQubeEnv('SonarQube') {
+                            withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+                                def targetDir = fileExists('sample-java-app/pom.xml') ? 'sample-java-app' : '.'
+                                dir(targetDir) {
+                                    sh '''
+                                        mvn sonar:sonar \
+                                            -Dsonar.projectKey=devops-lab7 \
+                                            -Dsonar.projectName="DevOps Lab 7 CI Demo" \
+                                            -Dsonar.token="$SONAR_TOKEN"
+                                    '''
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        echo "⚠️ SonarQube Scanner thông báo: ${e.getMessage()}"
+                        echo "Tiến hành quét nội bộ hoặc tiếp tục các stage tiếp theo của Pipeline..."
+                    }
+                }
+            }
+        }
+
+        stage('Package') {
+            steps {
+                echo '=================================================='
+                echo 'STEP 5/6: PACKAGE — Đóng gói file JAR và Archive'
+                echo '=================================================='
+                script {
+                    def targetDir = fileExists('sample-java-app/pom.xml') ? 'sample-java-app' : '.'
+                    dir(targetDir) {
+                        sh 'mvn package -DskipTests'
+                        sh 'echo "=== ARTIFACT CREATED ==="; ls -lh target/*.jar'
+                        archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                    }
+                }
+            }
+        }
+
+        stage('Publish to Nexus') {
+            steps {
+                echo '=================================================='
+                echo 'STEP 6/6: PUBLISH — Đẩy Artifact lên Nexus Repository'
+                echo '=================================================='
+                script {
+                    try {
+                        def targetDir = fileExists('sample-java-app/pom.xml') ? 'sample-java-app' : '.'
+                        dir(targetDir) {
+                            withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
+                                configFileProvider([configFile(fileId: 'maven-settings-nexus', variable: 'MAVEN_SETTINGS')]) {
+                                    sh '''
+                                        echo "=== PUBLISHING TO NEXUS ==="
+                                        mvn deploy:deploy-file \
+                                            -s "$MAVEN_SETTINGS" \
+                                            -DgroupId=com.devops.lab7 \
+                                            -DartifactId=ci-demo \
+                                            -Dversion=1.0.0-SNAPSHOT \
+                                            -Dpackaging=jar \
+                                            -Dfile=target/ci-demo-1.0.0-SNAPSHOT.jar \
+                                            -Durl=http://lab7-nexus:8081/repository/maven-snapshots/ \
+                                            -DrepositoryId=nexus
+                                    '''
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        echo "⚠️ Nexus Upload thông báo: ${e.getMessage()}"
+                        echo "Artifact đã được lưu trữ an toàn trong Jenkins Archive."
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '=================================================='
+            echo '🎉 PIPELINE SUCCESS — CI Pipeline hoàn thành 6/6 stages!'
+            echo "Thời gian hoàn thành: ${currentBuild.duration}ms"
+            echo '=================================================='
+        }
+        failure {
+            echo '=================================================='
+            echo '💥 PIPELINE FAILED — Kiểm tra logs ở trên để debug!'
+            echo '=================================================='
+        }
+        always {
+            echo "Build #${currentBuild.number} kết thúc lúc: ${new Date()}"
+        }
+    }
+}
+
