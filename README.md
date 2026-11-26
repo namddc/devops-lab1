@@ -24,6 +24,7 @@
 | [📁 **lab5/**](./lab5/) | **Quản lý Mã nguồn với Git Flow & Code Review** | Git Flow, Feature Branching, Pull Request, Merge Conflict, Python | ✅ Hoàn thành |
 | [📁 **lab6/**](./lab6/) | **Kiểm thử & Phân tích Mã nguồn Tĩnh trong DevOps** | Node.js Express, Postman/Newman, OWASP ZAP (DAST), SonarQube (SAST), CI Automation | ✅ Hoàn thành |
 | [📁 **lab7/**](./lab7/) | **Triển khai CI Pipeline với Jenkins, Maven, Nexus & SonarQube** | Jenkins Declarative Pipeline, Maven, JUnit 5, SonarQube SAST, Nexus Repository, Docker Compose | ✅ Hoàn thành |
+| [📁 **lab8/**](./lab8/) | **Phát hành Liên tục (CD) với Docker & Jenkins CD Pipeline** | Docker Multi-stage, Docker Compose, Redis, Nginx, Docker Hub, Jenkins CD Pipeline | ✅ Hoàn thành |
 
 ---
 
@@ -87,3 +88,12 @@ docker-compose up -d
 
 ---
 *© 2026 Nguyễn Văn Nam — Khoa Công nghệ Thông tin, ICTU*
+
+
+### 6. [Lab 8 — Phát hành Liên tục (CD) với Docker & Jenkins CD Pipeline](./lab8/)
+- Xây dựng Dockerfile tối ưu hóa với kỹ thuật Multi-stage build và phân quyền non-root user (appuser).
+- Quản trị ứng dụng đa dịch vụ bằng Docker Compose: Node.js App (port 3000), Redis Cache (port 6379), Nginx Reverse Proxy (port 80).
+- Đẩy Docker image lên kho lưu trữ Docker Hub Registry công khai (namddc/devops-lab8-app:1.0 & latest).
+- Xây dựng Jenkins CD Pipeline tự động hóa 6 giai đoạn (Checkout -> Build -> Scan -> Push -> Deploy -> Verify Healthcheck).
+- Lập bảng so sánh và phân tích toàn diện chu trình liên kết CI (Bài 7) sang CD (Bài 8).
+- Minh chứng đầy đủ qua 7 ảnh chụp màn hình trong lab8/screenshots/.

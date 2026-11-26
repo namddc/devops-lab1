@@ -1,0 +1,85 @@
+================================================================================
+BÀI THỰC HÀNH LAB 8: PHÁT HÀNH LIÊN TỤC (CD) — DOCKER & JENKINS CD PIPELINE
+HỌC PHẦN: VẬN HÀNH VÀ BẢO TRÌ PHẦN MỀM (DEVOPS)
+================================================================================
+
+1. THÔNG TIN SINH VIÊN THỰC HIỆN:
+   - Họ và tên: NGUYỄN VĂN NAM
+   - Mã số sinh viên (MSSV): DTC235180129
+   - Lớp: K22
+   - Email: dtc235180129@ictu.edu.vn
+   - GitHub Profile: https://github.com/namddc
+   - Repository: https://github.com/namddc/devops-lab1
+   - Docker Hub Profile: https://hub.docker.com/u/namddc
+   - Thư mục Lab: devops-lab1/lab8
+   - Trường: Trường Đại học Công nghệ Thông tin & Truyền thông - Đại học Thái Nguyên (ICTU)
+   - Giảng viên phụ trách: Cô Phạm Thương
+
+2. THÔNG TIN MÔI TRƯỜNG THỰC HIỆN:
+   - Hệ điều hành: GitHub Codespaces (Ubuntu Linux x64) & Windows 11
+   - Docker Engine: v27.x.x
+   - Docker Compose: v2.x.x
+   - Node.js Runtime: v18-alpine / v20
+   - Reverse Proxy: Nginx Alpine
+   - In-memory Cache: Redis 7 Alpine
+   - CI/CD Server: Jenkins LTS JDK 21
+
+3. CÁC NỘI DUNG VÀ CHECKPOINT ĐÃ HOÀN THÀNH (100% RUBRIC):
+   [x] BƯỚC 1: Xây dựng Dockerfile và Tối ưu hóa Docker Image (Multi-stage Build)
+       - Xây dựng ứng dụng Node.js Express cung cấp các REST API:
+         + GET  /        : Trả về thông điệp hệ thống, version 2.0.0, hostname, author.
+         + GET  /health  : Kiểm tra tình trạng sức khỏe uptime của dịch vụ.
+       - Viết Dockerfile tối ưu theo kỹ thuật Multi-stage build:
+         + Stage 1 (Builder): Sử dụng node:18-alpine cài đặt thư viện sạch qua npm install --production.
+         + Stage 2 (Production): Chỉ sao chép node_modules và mã nguồn cần thiết, loại bỏ rác build.
+         + Phân quyền bảo mật: Chạy dưới non-root user (appuser, UID 1001) thay vì root.
+         + Tích hợp HEALTHCHECK nội bộ kiểm tra định kỳ 30s.
+       - So sánh kích thước Docker Image:
+         + Image Multi-stage (devops-lab8-app:1.0): ~186 MB (nhẹ, an toàn, tối ưu).
+         + Image Single-stage thông thường (devops-lab8-app:fat): ~196 MB (cồng kềnh, thừa layer).
+
+   [x] BƯỚC 2: Quản lý Ứng dụng Đa Container với Docker Compose
+       - Thiết kế docker-compose.yml khởi tạo mạng riêng app-network điều phối 3 dịch vụ:
+         1. app (Node.js port 3000): Xử lý nghiệp vụ chính, phụ thuộc vào Redis.
+         2. redis (Redis 7 Alpine port 6379): Lưu trữ bộ nhớ tạm (Cache), có volume dữ liệu redis-data.
+         3. nginx (Nginx Alpine port 80): Cổng đón tiếp (Gateway/Reverse Proxy), chuyển tiếp lưu lượng vào App.
+       - Viết cấu hình nginx.conf định tuyến chuyển tiếp proxy_pass http://app:3000, cấu hình X-Real-IP và Forwarded headers.
+       - Kiểm tra hoạt động: Cả 3 container đều chạy Up; truy cập curl http://localhost/ qua Nginx trả về JSON hợp lệ.
+
+   [x] BƯỚC 3: Đẩy Image lên Docker Hub Registry
+       - Thực hiện xác thực docker login với tài khoản Docker Hub (namddc).
+       - Đặt tag cho image phiên bản ổn định (namddc/devops-lab8-app:1.0) và phiên bản mới nhất (namddc/devops-lab8-app:latest).
+       - Thực hiện docker push thành công lên Docker Hub Registry công khai.
+       - Kiểm tra kéo thử nghiệm (docker pull) và khởi chạy container từ image trên Hub hoạt động trơn tru.
+
+   [x] BƯỚC 4: Xây dựng Jenkins CD Pipeline Tự động Triển khai (Continuous Deployment)
+       - Thiết kế kịch bản Jenkinsfile chuẩn Declarative Pipeline gồm 6 giai đoạn:
+         Stage 1: Checkout ➔ Kéo mã nguồn mới nhất từ GitHub qua Git SCM.
+         Stage 2: Docker Build ➔ Tự động build Docker Image với tag động theo số build (${BUILD_NUMBER}).
+         Stage 3: Docker Scan ➔ Quét lỗ hổng an ninh Docker Image bằng Docker Scout.
+         Stage 4: Push to Registry ➔ Tự động đăng nhập Docker Hub qua Jenkins Credentials và push image lên registry.
+         Stage 5: Deploy Container ➔ Tự động dừng container cũ và khởi chạy container mới (lab8-cd-production) tại port 3002.
+         Stage 6: Verify Deploy ➔ Thực hiện curl tự động kiểm tra endpoint /health xác nhận deploy thành công.
+       - Cấu hình phân quyền Docker Socket cho Jenkins (/var/run/docker.sock) đảm bảo pipeline chạy mượt mà.
+
+   [x] BƯỚC 5: Phân tích và Kết nối Chuỗi CI/CD Toàn diện (Bài 7 ➔ Bài 8)
+       - Xây dựng sơ đồ luồng kết hợp hoàn chỉnh:
+         Commit Git ➔ [CI: Build -> Test -> SonarQube -> Package] ➔ [CD: Docker Build -> Push Hub -> Deploy -> Healthcheck].
+
+4. BẢNG SO SÁNH CHUYÊN SÂU CI (BÀI 7) VS CD (BÀI 8):
+------------------------------------------------------------------------------------------------------------------------
+| Tiêu chí so sánh        | CI — Continuous Integration (Bài 7)     | CD — Continuous Delivery/Deployment (Bài 8)     |
+|-------------------------|-----------------------------------------|-------------------------------------------------|
+| **Mục tiêu cốt lõi**    | Kiểm tra mã nguồn có lỗi hay không      | Đóng gói và phát hành ứng dụng tới người dùng   |
+| **Đầu vào (Input)**     | Mã nguồn thô (Source Code, Pull Request)| Mã nguồn đã pass CI / Artifact đã build         |
+| **Đầu ra (Output)**     | File nhị phân (.jar, .war), test report | Docker Image, Container đang chạy trên Server   |
+| **Công cụ chủ đạo**     | Maven, JUnit 5, SonarQube, Nexus        | Docker, Docker Compose, Docker Hub, Kubernetes   |
+| **Câu hỏi giải quyết**  | "Code mới có an toàn để merge không?"   | "Hệ thống có sẵn sàng chạy trên Production?"    |
+| **Tần suất thực thi**   | Liên tục trên mỗi commit / pull request | Sau khi CI hoàn thành hoặc khi phát hành release |
+| **Khi xảy ra thất bại** | Lỗi logic code, vỡ test, lỗi bảo mật SAST| Lỗi đóng gói image, lỗi mạng, lỗi deploy container|
+------------------------------------------------------------------------------------------------------------------------
+
+5. BÀI HỌC VÀ KẾT LUẬN VẬN DỤNG:
+   - **Tối ưu hóa tài nguyên:** Kỹ thuật Multi-stage build loại bỏ toàn bộ môi trường và cache build thừa, giảm kích thước image, tăng tốc độ tải và giảm diện tích tấn công (attack surface).
+   - **Bảo mật Container (Container Hardening):** Việc không chạy dưới quyền user root trong container ngăn ngừa nguy cơ tấn công leo thang đặc quyền ra máy chủ host.
+   - **Tự động hóa phát hành (Zero-downtime & Fast Rollout):** Jenkins CD Pipeline giúp tự động hóa từ khâu đóng gói đến triển khai, loại bỏ rủi ro sai sót do con người thao tác thủ công trên production.
