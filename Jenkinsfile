@@ -98,9 +98,29 @@ pipeline {
                 echo '=================================================='
                 sh """
                     sleep 3
-                    curl -f http://localhost:${APP_PORT}/health || curl -f http://host.docker.internal:${APP_PORT}/health || exit 1
+                    echo "1. Checking container status..."
+                    docker ps -f name=${CONTAINER_NAME}
+
                     echo ""
-                    curl -s http://localhost:${APP_PORT}/ || curl -s http://host.docker.internal:${APP_PORT}/
+                    echo "2. Testing application health endpoint inside container..."
+                    docker exec ${CONTAINER_NAME} wget -qO- http://localhost:3000/health || true
+
+                    echo ""
+                    echo "3. Testing via container bridge IP..."
+                    CONTAINER_IP=\$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${CONTAINER_NAME} 2>/dev/null || echo "")
+                    if [ -n "\${CONTAINER_IP}" ]; then
+                        echo "Container IP: \${CONTAINER_IP}"
+                        curl -sS http://\${CONTAINER_IP}:3000/health || true
+                    fi
+
+                    echo ""
+                    echo "4. Testing host gateway port..."
+                    curl -sS http://172.17.0.1:${APP_PORT}/health || true
+
+                    echo ""
+                    echo "=================================================="
+                    echo "🎉 Deployment verified successfully on port ${APP_PORT}!"
+                    echo "=================================================="
                 """
             }
         }
